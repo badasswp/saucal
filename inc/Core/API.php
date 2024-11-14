@@ -49,7 +49,6 @@ class API {
 		$this->options['headers'] = [
 			'Cache-Control' => 'no-cache',
 			'Content-Type'  => 'application/json',
-			'Authorization' => 'Bearer ' . $credentials,
 		];
 
 		/**
@@ -124,7 +123,7 @@ class API {
 	 *
 	 * @return mixed[]|\WP_Error
 	 */
-	protected function fetch() {
+	public function fetch() {
 		$api_headers = $this->get_headers();
 		$api_body    = $this->get_body();
 
