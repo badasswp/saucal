@@ -110,7 +110,7 @@ class API {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $response
+	 * @param string $response API Response.
 	 * @return mixed[]
 	 */
 	protected function get_json( $response ): array {
