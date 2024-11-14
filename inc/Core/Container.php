@@ -10,7 +10,7 @@
 
 namespace Saucal\Core;
 
-use Saucal\Services\Boot;
+use Saucal\Services\MyAccount;
 use Saucal\Interfaces\Kernel;
 
 class Container implements Kernel {
@@ -30,7 +30,7 @@ class Container implements Kernel {
 	 */
 	public function __construct() {
 		static::$services = [
-			Boot::class,
+			MyAccount::class,
 		];
 	}
 
