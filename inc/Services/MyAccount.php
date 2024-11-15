@@ -119,7 +119,7 @@ class MyAccount extends Service implements Kernel {
 	 * @return mixed[]
 	 */
 	protected function get_feed_options(): array {
-		foreach( ( $this->get_user_feed() ?? [] ) as $feed ) {
+		foreach ( ( $this->get_user_feed() ?? [] ) as $feed ) {
 			$user_feed .= sprintf( '<li>%s</li>', $feed );
 		}
 
@@ -133,7 +133,7 @@ class MyAccount extends Service implements Kernel {
 					'ul' => [],
 					'li' => [],
 				],
-			)
+			),
 		];
 	}
 
