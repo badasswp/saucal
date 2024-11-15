@@ -28,4 +28,28 @@ class MyAccount extends Service implements Kernel {
 		add_action( 'woocommerce_account_saucal-tab_endpoint', [ $this, 'add_saucal_content' ] );
 		add_filter( 'woocommerce_account_menu_items', [ $this, 'add_saucal_tab' ] );
 	}
+
+	/**
+	 * Add Saucal Tab.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param mixed[] $menu_items Menu Items.
+	 * @return mixed[]
+	 */
+	public function add_saucal_tab( $menu_items ): array {
+		$menu_items['saucal-tab'] = __( 'User Feed', 'saucal' );
+		return $menu_items;
+	}
+
+	/**
+	 * Add Saucal Endpoint.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
+	public function add_saucal_endpoint(): void {
+		add_rewrite_endpoint( 'saucal-tab', EP_ROOT | EP_PAGES );
+	}
 }
