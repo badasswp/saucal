@@ -173,4 +173,41 @@ class MyAccount extends Service implements Kernel {
 			);
 		}
 	}
+
+	/**
+	 * Get User Feed.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return mixed[]
+	 */
+	protected function get_user_feed(): array {
+		$cache_key  = 'saucal_cache_' . get_current_user_id();
+		$cache_data = wp_cache_get( $cache_key );
+
+		if ( ! $cache_data ) {
+			$feed = ( new API( 'https://httpbin.org/post', [ 'body' => $this->get_payload() ] ) )->fetch();
+			wp_cache_set( $cache_key, $feed );
+
+			return $feed;
+		}
+
+		return $cache_data;
+	}
+
+	/**
+	 * Get Payload.
+	 *
+	 * Parse each payload item found in the textarea
+	 * line by line and send as payload.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return mixed[]
+	 */
+	protected function get_payload(): array {
+		$payload = get_user_meta( get_current_user_id(), 'saucal_user_feed', true );
+
+		return str_getcsv( $payload, "\n" );
+	}
 }
