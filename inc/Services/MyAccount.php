@@ -52,4 +52,88 @@ class MyAccount extends Service implements Kernel {
 	public function add_saucal_endpoint(): void {
 		add_rewrite_endpoint( 'saucal-tab', EP_ROOT | EP_PAGES );
 	}
+
+	/**
+	 * Add Saucal Content.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
+	public function add_saucal_content(): void {
+		if ( ! is_user_logged_in() ) {
+			return;
+		}
+
+		// User Feed Form.
+		vprintf(
+			'<form method="POST" action="./">
+				<div>
+					<h3>%1$s</h3>
+					<p>%6$s</p>
+					<p><textarea name="%2$s" rows="5">%7$s</textarea></p>
+					<p><button name="%3$s">%4$s</button></p>
+					<p>%5$s</p>
+				</div>
+			</form>',
+			$this->get_form_options()
+		);
+
+		// User Feed Data.
+		vprintf(
+			'<div>
+				<h3>%s</h3>
+				<div>%s</div>
+			</div>',
+			$this->get_feed_options()
+		);
+	}
+
+	/**
+	 * Get Form Options.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return mixed[]
+	 */
+	protected function get_form_options(): array {
+		$nonce_name   = 'saucal_nonce';
+		$nonce_action = 'saucal_action';
+
+		return [
+			'heading'      => esc_html__( 'Form', 'saucal' ),
+			'txarea_name'  => esc_attr( 'saucal_list' ),
+			'button_name'  => esc_attr( 'saucal_submit' ),
+			'button_label' => esc_html__( 'Submit', 'saucal' ),
+			'nonce_field'  => wp_nonce_field( $nonce_action, $nonce_name, true, false ),
+			'description'  => esc_html__( 'Enter the list of elements in the text area box below, each element should be on one line.', 'saucal' ),
+			'form_content' => get_user_meta( get_current_user_id(), 'saucal_user_feed', true ),
+		];
+	}
+
+	/**
+	 * Get Feed Options.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return mixed[]
+	 */
+	protected function get_feed_options(): array {
+		foreach( ( $this->get_user_feed() ?? [] ) as $feed ) {
+			$user_feed .= sprintf( '<li>%s</li>', $feed );
+		}
+
+		$user_feed = sprintf( '<ul>%s</ul>', $user_feed );
+
+		return [
+			'heading' => esc_html__( 'User Feed', 'saucal' ),
+			'content' => wp_kses(
+				$user_feed,
+				[
+					'ul' => [],
+					'li' => [],
+				],
+			)
+		];
+	}
 }
