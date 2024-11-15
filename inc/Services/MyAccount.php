@@ -136,4 +136,41 @@ class MyAccount extends Service implements Kernel {
 			)
 		];
 	}
+
+	/**
+	 * Save Form Options.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
+	public function save_form_options(): void {
+		$nonce_name   = 'saucal_nonce';
+		$nonce_action = 'saucal_action';
+
+		if (
+			isset( $_POST['saucal_submit'] ) &&
+			wp_verify_nonce(
+				sanitize_text_field( wp_unslash( $_POST[ $nonce_name ] ?? '' ) ),
+				$nonce_action
+			)
+		) {
+			// Update Settings.
+			update_user_meta(
+				get_current_user_id(),
+				'saucal_user_feed',
+				sanitize_textarea_field( $_POST['saucal_list'] )
+			);
+
+			// Update Cache.
+			$cache_key = 'saucal_cache_' . get_current_user_id();
+			wp_cache_set(
+				$cache_key,
+				( new API(
+					'https://httpbin.org/post',
+					$this->get_payload()
+				) )->fetch()
+			);
+		}
+	}
 }
